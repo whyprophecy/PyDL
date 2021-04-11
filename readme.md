@@ -1,4 +1,4 @@
 This is the homework for PyDL.
-The utils.py contains class and function.
-The main.py contains the main part of the program.
-The test.py is simply used for testing.
+A visual program for searching items in the binding of issac using wiki api.
+The utils.py contains API part.
+The main.py contains GUI part.
