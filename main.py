@@ -1,20 +1,21 @@
 import sys
-from test2 import *
+from utils import *
 from PIL import Image
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QLabel
 
 
-class searchitem(QWidget):
+class isaacsearcher(QWidget):
     def __init__(self):
         super().__init__()
         self.item = item()
         self.initUI()
 
     def initUI(self):
-        self.setGeometry(300, 300, 1000, 1000)
+        self.setGeometry(300, 300, 1000, 700)
         self.setWindowTitle('Issac Item Searcher')
 
+        # download the image and present it
         self.headimage = QLabel(self)
         Image.open(requests.get('https://static.wikia.nocookie.net/bindingofisaacre_gamepedia/images/e/e5/Character_Isaac_appearance.png/revision/latest/scale-to-width-down/84?cb=20150104210047', stream=True).raw).save(
             'temporaryimage1.png')
@@ -28,13 +29,16 @@ class searchitem(QWidget):
 
         self.itemdescription = QLabel(self.item.description, self)
         self.itemdescription.setWordWrap(True)
+        # set description to warp automatically
 
         self.searchbutton = QPushButton('Search', self)
         self.searchbutton.clicked.connect(self.search)
+        # connect the button with search functon
 
         self.searchcontent = QLineEdit('', self)
         self.searchcontent.setFocus()
 
+        # use 1 hbox (containing 2 vbox) to build up the GUI
         vboxleft = QVBoxLayout()
         vboxleft.addStretch(2)
         vboxleft.addWidget(self.headimage)
@@ -67,14 +71,17 @@ class searchitem(QWidget):
         self.setLayout(hbox)
 
     def search(self):
+        # call search function in class:item
         self.item.search(str(self.searchcontent.text()))
-        self.refresh()
+        self.refresh()  # refresh those lables with new search result
 
     def refresh(self):
+        # download the image and present it
         Image.open(requests.get(self.item.imageurl, stream=True).raw).save(
             'temporaryimage2.png')
         itemimage = QPixmap('temporaryimage2.png')
         self.itemimage.setPixmap(itemimage)
+
         self.itemname.setText('Name: '+self.item.name)
         self.itemid.setText('ID: '+self.item.itemid)
         self.itemquote.setText('Quote: '+self.item.quote)
@@ -83,6 +90,6 @@ class searchitem(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = searchitem()
+    ex = isaacsearcher()
     ex.show()
     sys.exit(app.exec_())
