@@ -1,5 +1,6 @@
-import test2
+from test2 import *
 import sys
+from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox, QLineEdit, QHBoxLayout, QVBoxLayout, QLabel
 
 
@@ -12,17 +13,20 @@ class searchitem(QWidget):
     def initUI(self):
         self.setGeometry(300, 300, 1000, 1000)
         self.setWindowTitle('Issac Item Searcher')
-        self.headimage = QLabel('1', self)
-        self.itemimage = QLabel('2', self)
-        self.itemID = QLabel(self.item.itemid, self)
+
+        self.headimage = QLabel(self)
+        headimage = QPixmap('isaac.png')
+        self.headimage.setPixmap(headimage)
+
+        self.itemimage = QLabel('ItemImage', self)
+        self.itemid = QLabel(self.item.itemid, self)
         self.itemquote = QLabel(self.item.quote, self)
         self.itemdescription = QLabel(self.item.description, self)
 
         self.searchbutton = QPushButton('Search', self)
         self.searchbutton.clicked.connect(self.search)
 
-        self.searchcontent = QLineEdit('Input the item name here', self)
-        self.searchcontent.selectAll()
+        self.searchcontent = QLineEdit('', self)
         self.searchcontent.setFocus()
 
         vboxleft = QVBoxLayout()
@@ -38,7 +42,7 @@ class searchitem(QWidget):
         vboxright.addStretch(1)
         vboxright.addWidget(self.itemimage)
         vboxright.addStretch(1)
-        vboxright.addWidget(self.itemID)
+        vboxright.addWidget(self.itemid)
         vboxright.addStretch(1)
         vboxright.addWidget(self.itemquote)
         vboxright.addStretch(1)
@@ -55,7 +59,17 @@ class searchitem(QWidget):
         self.setLayout(hbox)
 
     def search(self):
-        pass
+        self.item.search(str(self.searchcontent.text()))
+        self.refresh()
+
+    def refresh(self):
+        Image.open(requests.get(self.item.imageurl, stream=True).raw).save(
+            'temporaryimage.png')
+        itemimage = QPixmap('temporaryimage.png')
+        self.itemimage.setPixmap(itemimage)
+        self.itemid.setText(self.item.itemid)
+        self.itemquote.setText(self.item.quote)
+        self.itemdescription.setText(self.item.description)
 
 
 if __name__ == '__main__':

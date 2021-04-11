@@ -1,5 +1,6 @@
 import requests
 import json
+from PIL import Image
 
 
 class item:
